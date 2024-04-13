@@ -1,0 +1,166 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+
+:root {
+    --text: #223;
+    --shadows: #3338;
+    --bg: linear-gradient(135deg, #d5dee0, #e3f3e6);
+
+    --cell: linear-gradient(-45deg, #dfe9e5 40%, #efefef);
+    --found-cell: linear-gradient(135deg, #defeff, #bef0be);
+    --bingo-cell: linear-gradient(135deg, #defeff, #bedeff);
+
+    --btn-light: #d4fbea;
+    --btn-bg:    #c1efda;
+    --btn-bgLow: #8fd7b5;
+    --btn-icon:  #567871;
+}
+
+:root[mode=night] {
+    --text: #f2f2f2;
+    --shadows: #99178f87;
+    --bg: linear-gradient(135deg, #3c383d, #160d18);
+
+    --cell: linear-gradient(135deg, #9875bc, #6c4989);
+    --found-cell: linear-gradient(-45deg, #520f68 40%, #9a2f8f);
+    --bingo-cell: linear-gradient(135deg, #6b3cbe, #8f10c1);
+
+    --btn-light: #f79bff;
+    --btn-bg:    #523054;
+    --btn-bgLow: #73567a;
+    --btn-icon:  #aa21bc;
+}
+
+html, body {
+    width: 100%;
+    height: 100vh;
+    color: var(--text);
+    background: var(--bg);
+    transition: background-color .2s ease-in-out;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    user-select: none;
+    font-family: "Platypi", serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+}
+
+header {
+    width: 100%;
+    height: 10%;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+button#mode {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 1rem;
+    width: 5rem;
+    height: 2.4rem;
+    border-radius: 2rem;
+    border: 2px solid var(--btn-bg);
+    background: linear-gradient(to right, var(--btn-bgLow), var(--btn-bg) 50%);
+    box-shadow: inset 0 0 0 2px var(--btn-light), 2px 2px 5px var(--shadows);
+    display: flex;
+    align-items: center;
+    transition: all .2s ease-in-out;
+}
+
+button#mode[mode=night] >svg {
+    translate: 150%;
+    rotate: 45deg;
+}
+
+button#mode > svg {
+    width: fit-content;
+    height: 70%;
+    margin-inline: .5rem;
+    fill: var(--btn-icon);
+    transition: all .2s ease-in-out;
+}
+
+h1#hero {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    font-weight: 500;
+    flex-grow: 1;
+}
+
+footer {
+    height: 5%;
+}
+
+.table-container {
+    max-height: 70vh;
+    aspect-ratio: 1 / 1;
+}
+
+.bingo-table, .bingo-row, .bingo-cell {
+    aspect-ratio: inherit;
+}
+
+.bingo-table {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.bingo-row {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+}
+
+.bingo-cell {
+    width: 20%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: .8rem;
+    padding: .5rem;
+    border-radius: .5rem;
+    background: var(--cell);
+    box-shadow: 2px 2px 5px var(--shadows);
+    transition: scale .2s ease-in-out;
+}
+
+.bingo-cell:active {
+    scale: 1.05;
+}
+
+.bingo-cell[found=true] {
+    background: var(--found-cell);
+}
+
+@keyframes bingo {
+    0%, 100% {
+        scale: 1;
+    }
+
+    50% {
+        scale: 1.05;
+        background: var(--bingo-cell);
+    }
+}
+
+.bingo-cell.bingo {
+    animation: bingo .75s ease-in-out;
+}
