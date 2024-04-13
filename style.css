@@ -35,19 +35,26 @@
     --btn-icon:  #aa21bc;
 }
 
-html, body {
+html {
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    display: table;
+}
+
+body {
+    width: 100%;
+    display: table-cell;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
     color: var(--text);
     background: var(--bg);
     transition: background-color .2s ease-in-out;
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
     user-select: none;
     font-family: "Platypi", serif;
     font-optical-sizing: auto;
@@ -55,12 +62,17 @@ body {
     font-style: normal;
 }
 
-header {
+#wrapper {
     width: 100%;
-    height: 10%;
-    margin-bottom: 1rem;
+    height: 100%;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+header {
+    margin-top: 4rem;
+    flex-grow: 1;
 }
 
 button#mode {
@@ -93,29 +105,20 @@ button#mode > svg {
 }
 
 h1#hero {
-    width: 100%;
-    margin: auto;
     text-align: center;
     font-weight: 500;
-    flex-grow: 1;
-}
-
-footer {
-    height: 5%;
+    font-size: 1.5rem;
 }
 
 .table-container {
-    max-height: 70vh;
-    aspect-ratio: 1 / 1;
-}
-
-.bingo-table, .bingo-row, .bingo-cell {
-    aspect-ratio: inherit;
+    width: 100%;
+    padding: 1rem;
+    flex-grow: 4;
+    display: flex;
+    justify-content: center;
 }
 
 .bingo-table {
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     gap: .5rem;
@@ -128,18 +131,23 @@ footer {
 }
 
 .bingo-cell {
-    width: 20%;
+    min-width: 4rem;
+    max-width: 4rem;
+    aspect-ratio: 1 / 1;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
-    font-size: .8rem;
+    font-size: .6rem;
     padding: .5rem;
     border-radius: .5rem;
     background: var(--cell);
     box-shadow: 2px 2px 5px var(--shadows);
     transition: scale .2s ease-in-out;
+    animation: none;
 }
 
 .bingo-cell:active {
@@ -159,8 +167,4 @@ footer {
         scale: 1.05;
         background: var(--bingo-cell);
     }
-}
-
-.bingo-cell.bingo {
-    animation: bingo .75s ease-in-out;
 }

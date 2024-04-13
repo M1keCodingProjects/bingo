@@ -32,6 +32,7 @@
     todaysDate.setHours(23, 59, 59, 999); //Saved data expires at midnight
     document.getElementById("hero").innerHTML += todaysDate.toLocaleDateString("en-GB");
 
+    let modeIsNight = false; // this goes here because saved data depends on it, other stuff is later cuz of rendering perf.
     let randomizedEntries = [];
     let matrix = [...Array(25)].map(e => false);
     readDataIfSaved();
@@ -54,30 +55,36 @@
                     
                     e.preventDefault(); return false;
                 });
-
-                cell.addEventListener("animationend", e => e.target.classList.remove("bingo"));
             }));
     
-    let modeIsNight = false;
     // I need to save the btn otherwise the svg inside it becomes the event target lmao.
     const modeBtn = document.getElementById("mode");
+    toggleDocumentMode(); // Here, cuz why not and also btn needs to be defined.
     modeBtn.onclick =_=> {
         modeIsNight = !modeIsNight;
-        attrStr     =  modeIsNight ? "night" : "day";
+        
+        toggleDocumentMode();        
+        setCookie("nightModeOn", +modeIsNight);
+    };
+
+    function toggleDocumentMode() {
+        const attrStr =  modeIsNight ? "night" : "day";
 
         modeBtn.setAttribute("mode", attrStr);
         document.documentElement.setAttribute("mode", attrStr);
-    };
+    }
 
     function readDataIfSaved() {
         if(!document.cookie) {
             for(let i = 0; i < ENTRIES_AMT; i++)
                 randomizedEntries.push(ENTRIES.splice(Math.floor(Math.random() * ENTRIES.length), 1)[0])
             
+            setCookie("nightModeOn", +modeIsNight);
             setCookie("boardEntries", randomizedEntries.join("#")); return;
         }
         
         boardState = getCookie("boardState");
+        modeIsNight = !!+getCookie("nightModeOn");
         randomizedEntries = getCookie("boardEntries").split("#");
         
         if(boardState) matrix = boardState.split("").map(d => !!+d);
@@ -137,9 +144,12 @@
     }
 
     async function startBingoAnimOnCells(ids) {
-        for(id of ids) {
-            document.getElementById(id).classList.add("bingo");
-            await sleep(100);
+        for(const id of ids) {
+            const cell = document.getElementById(id);
+            cell.style.animation = "none";
+            await sleep(50);
+            cell.style.animation = "bingo .75s ease-in-out";
+            await sleep(50);
         };
     }
     
