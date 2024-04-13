@@ -158,7 +158,8 @@
     }
 
     function setCookie(name, value) {
-        document.cookie = `${name}=${value}; expires=${todaysDate.toUTCString()}; path=/`;
+        const expiry = name === "nightModeOn" ? "" : `expires=${todaysDate.toUTCString()}; `; 
+        document.cookie = `${name}=${value}; ${expiry}path=/`;
     }
 
     function getCookie(name) {
