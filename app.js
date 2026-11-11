@@ -28,9 +28,29 @@
     ];
     const ENTRIES_AMT = ENTRIES.length;
 
+    // https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
+    const getSeed = (n = Math.random()) => (n * 2 ** 32) >>> 0;
+    function dateSeededRandGen(date) {
+        seed1 = getSeed(date.getDay() / 6);
+        seed2 = getSeed(date.getDate() / 30);
+        seed3 = getSeed(date.getMonth() / 11);
+        seed4 = getSeed(1 / (date.getYear() + 1));
+        return function() {
+            seed1 |= 0; seed2 |= 0; seed3 |= 0; seed4 |= 0;
+            let t = (seed1 + seed2 | 0) + seed4 | 0;
+            seed4 = seed4 + 1 | 0;
+            seed1 = seed2 ^ seed2 >>> 9;
+            seed2 = seed3 + (seed3 << 3) | 0;
+            seed3 = (seed3 << 21 | seed3 >>> 11);
+            seed3 = seed3 + t | 0;
+            return (t >>> 0) / 4294967296;
+        }
+    }
+
     const todaysDate = new Date();
     todaysDate.setHours(23, 59, 59, 999); //Saved data expires at midnight
     document.getElementById("hero").innerHTML += todaysDate.toLocaleDateString("en-GB");
+    const randGen = dateSeededRandGen(todaysDate);
 
     let modeIsNight = false; // this goes here because saved data depends on it, other stuff is later cuz of rendering perf.
     let randomizedEntries = [];
@@ -77,7 +97,7 @@
     function readDataIfSaved() {
         if(!document.cookie) {
             for(let i = 0; i < ENTRIES_AMT; i++)
-                randomizedEntries.push(ENTRIES.splice(Math.floor(Math.random() * ENTRIES.length), 1)[0])
+                randomizedEntries.push(ENTRIES.splice(Math.floor(randGen() * ENTRIES.length), 1)[0])
             
             setCookie("nightModeOn", +modeIsNight);
             setCookie("boardEntries", randomizedEntries.join("#")); return;
